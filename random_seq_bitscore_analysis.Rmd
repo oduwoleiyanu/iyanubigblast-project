@@ -1,0 +1,54 @@
+---
+title: "Random_seq Bitscores"
+output: html_notebook
+---
+**Replicating the GEM MAGs bitscore analysis on a random seq 
+
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(tidyverse)
+library(RColorBrewer)
+theme_set(
+  theme_light() + theme(legend.position = "none") 
+)
+
+random_seq <- read.csv("/home/ioduwole/Documents/projects/blasttrial/data/outputs/random_seq_output.tsv", sep = "\t", header =  FALSE)
+
+random_seq <- random_seq[-c(1, 2, 3) ,]
+random_seq <- random_seq[-1]
+colnames(random_seq) <- c("subject_id", "pident",
+                          "alignment_length", "mismatch", "gapopen", 
+                          "qstart", "qend", "sstart", "send", "evalue", "bitscore")
+
+random_seq <- random_seq %>%
+  mutate(norm_bitscore = bitscore/alignment_length)
+
+random_se
+
+ggplot(random_seq) + 
+  geom_density(aes(x= norm_bitscore),show_guide=FALSE)+
+  stat_density(aes(x= norm_bitscore),
+               geom="line",position="identity")+
+  scale_color_brewer(palette = "Dark2")+
+  ylab("Density")+
+  xlab("Normalized Bitscores")+
+  theme(
+    axis.title.x = element_text(size = 15, face = "bold"),
+    axis.title.y = element_text(size = 15, face = "bold"))
+
+## percentage identity
+ggplot(random_seq) + 
+  geom_density(aes(x= pident),show_guide=FALSE)+
+  stat_density(aes(x= pident),
+               geom="line",position="identity")+
+  scale_color_brewer(palette = "Dark2")+
+  ylab("Density")+
+  xlab("Percentage identity")+
+  theme(
+    axis.title.x = element_text(size = 15, face = "bold"),
+    axis.title.y = element_text(size = 15, face = "bold"))
+
+
+```
+
